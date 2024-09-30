@@ -17,8 +17,8 @@ func LoadByStage() error {
 
 	if _, err := os.Stat(envFile); os.IsNotExist(err) {
 		encryptedEnvFile := envFile + ".enc"
-		if _, err := os.Stat(envFile); os.IsNotExist(err) {
-			return fmt.Errorf("%s not found", envFile)
+		if _, err := os.Stat(encryptedEnvFile); os.IsNotExist(err) {
+			return fmt.Errorf("%s not found", encryptedEnvFile)
 		}
 
 		secretsPassword, err := GetSecretsPassword()
