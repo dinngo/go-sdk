@@ -23,16 +23,16 @@ func LoadByStage() error {
 
 		secretsPassword, err := GetSecretsPassword()
 		if err != nil {
-			return fmt.Errorf("failed to get secrets password")
+			return fmt.Errorf("failed to get secrets password: %s", err.Error())
 		}
 
 		if err := crypto.FileDecrypter(encryptedEnvFile, envFile, []byte(secretsPassword)); err != nil {
-			return fmt.Errorf("failed to decrypt %s", encryptedEnvFile)
+			return fmt.Errorf("failed to decrypt %s (%s): %s", encryptedEnvFile, secretsPassword, err.Error())
 		}
 	}
 
 	if err := godotenv.Load(envFile); err != nil {
-		return fmt.Errorf("failed to load %s", envFile)
+		return fmt.Errorf("failed to load %s: %s", envFile, err.Error())
 	}
 
 	return nil

@@ -8,7 +8,6 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"io"
-	"io/ioutil"
 	"os"
 
 	"golang.org/x/crypto/pbkdf2"
@@ -58,7 +57,7 @@ func FileDecrypter(src string, dst string, key []byte) error {
 		return err
 	}
 
-	ciphertext, err := ioutil.ReadFile(src)
+	ciphertext, err := os.ReadFile(src)
 	if err != nil {
 		return err
 	}
