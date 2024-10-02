@@ -11,7 +11,7 @@ import (
 	"github.com/dinngo/go-sdk/utils"
 )
 
-func PutErrorMetric(namesapce string, service string) error {
+func putMetric(name, namesapce, service string) error {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return err
@@ -22,7 +22,7 @@ func PutErrorMetric(namesapce string, service string) error {
 		Namespace: utils.Pointer(namesapce),
 		MetricData: []types.MetricDatum{
 			{
-				MetricName: utils.Pointer("Error"),
+				MetricName: utils.Pointer(name),
 				Timestamp:  utils.Pointer(time.Now().UTC()),
 				Unit:       types.StandardUnitCount,
 				Value:      aws.Float64(1),
@@ -40,4 +40,21 @@ func PutErrorMetric(namesapce string, service string) error {
 	}
 
 	return nil
+}
+
+func PutErrorMetric(namesapce, service string) error {
+	return putMetric("Error", namesapce, service)
+}
+
+func PutHealthyMetric(namesapce, service string) error {
+	return putMetric("Healthy", namesapce, service)
+}
+
+func MonitorHealthy(namesapce, service string) {
+	go func() {
+		for {
+			PutHealthyMetric(namesapce, service)
+			time.Sleep(time.Minute)
+		}
+	}()
 }
